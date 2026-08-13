@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DeviceDataGenerator.Tests/DeviceDataGenerator.Tests.csproj" />
+  <Project Path="DeviceDataGenerator/DeviceDataGenerator.csproj" />
+</Solution>
