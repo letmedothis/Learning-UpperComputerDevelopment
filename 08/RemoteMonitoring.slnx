@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="RemoteMonitoring.Api/RemoteMonitoring.Api.csproj" />
+  <Project Path="RemoteMonitoring.Core/RemoteMonitoring.Core.csproj" />
+  <Project Path="RemoteMonitoring.Tests/RemoteMonitoring.Tests.csproj" />
+</Solution>

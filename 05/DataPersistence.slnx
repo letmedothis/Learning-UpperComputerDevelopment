@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="DataPersistence.Core/DataPersistence.Core.csproj" />
+  <Project Path="DataPersistence.Data/DataPersistence.Data.csproj" />
+  <Project Path="DataPersistence.Tests/DataPersistence.Tests.csproj" />
+</Solution>

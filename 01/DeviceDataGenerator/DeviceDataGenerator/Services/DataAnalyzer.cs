@@ -38,6 +38,9 @@ public class DataAnalyzer
     /// <param name="maxSamples">最大样本数量，默认60</param>
     public DataAnalyzer(int maxSamples = 60)
     {
+        // 滑动窗口必须至少容纳一个样本，否则 AddReading 会不断删除，
+        // 负数容量还会在列表已空时继续 RemoveAt(0)。
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxSamples, 1);
         _maxSamples = maxSamples;
     }
 
@@ -169,6 +172,10 @@ public class DataAnalyzer
     /// <returns>分组统计结果</returns>
     public IEnumerable<(string Range, int Count)> GroupByTemperatureRange(double step = 5.0)
     {
+        // 分组步长是除数，也是下一段区间的增量；零或负数没有可解释的区间语义。
+        if (step <= 0 || double.IsNaN(step) || double.IsInfinity(step))
+            throw new ArgumentOutOfRangeException(nameof(step), step, "温度分组步长必须是有限的正数。");
+
         // 空数据检查
         if (!_readings.Any())
             return Enumerable.Empty<(string, int)>();

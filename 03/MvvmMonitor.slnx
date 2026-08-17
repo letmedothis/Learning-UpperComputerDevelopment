@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MvvmMonitor.App/MvvmMonitor.App.csproj" />
+  <Project Path="MvvmMonitor.Core/MvvmMonitor.Core.csproj" />
+  <Project Path="MvvmMonitor.Tests/MvvmMonitor.Tests.csproj" />
+</Solution>

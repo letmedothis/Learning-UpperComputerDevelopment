@@ -37,6 +37,9 @@ public class DeviceDataGeneratorService : IDisposable
     /// <summary>随机数生成器 - 用于模拟传感器数据波动</summary>
     private readonly Random _random = new();
 
+    /// <summary>保护运行状态与 CTS 的发布/回收，确保同一时间最多只有一个采集循环。</summary>
+    private readonly object _stateLock = new();
+
     /// <summary>
     /// 取消令牌源 - 用于控制数据生成循环的停止
     /// 注意：这是内部的 CancellationTokenSource，可以与外部的 CancellationToken 链接
@@ -102,7 +105,14 @@ public class DeviceDataGeneratorService : IDisposable
     /// 是否正在运行
     /// 使用表达式体语法 =&gt; 简化只读属性
     /// </summary>
-    public bool IsRunning => _isRunning;
+    public bool IsRunning
+    {
+        get
+        {
+            lock (_stateLock)
+                return _isRunning;
+        }
+    }
 
     // ========== 公共方法 ==========
 
@@ -126,37 +136,59 @@ public class DeviceDataGeneratorService : IDisposable
     /// </param>
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        // 防止重复启动
-        if (_isRunning)
+        CancellationTokenSource runCts;
+
+        // “检查是否运行”和“登记本轮 CTS”必须是同一个原子步骤，
+        // 否则并发调用可能同时通过检查，产生 Stop 无法全部取消的后台循环。
+        lock (_stateLock)
         {
-            _logger.LogWarning("数据生成器已在运行");
-            return;
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (_isRunning)
+            {
+                _logger.LogWarning("数据生成器已在运行");
+                return;
+            }
+
+            runCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            _cts = runCts;
+            _isRunning = true;
         }
-
-        // 创建链接取消令牌
-        // 这样内部取消（Stop()）或外部取消（cancellationToken）都会生效
-        _cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        _isRunning = true;
-
-        // 触发状态变化事件
-        OnStatusChanged("数据采集启动");
-        _logger.LogInformation("数据生成器启动，采样间隔: 1秒");
 
         try
         {
+            // 状态事件也放在 try 内：订阅者失败时仍能执行 finally，释放本轮运行权。
+            OnStatusChanged("数据采集启动");
+            _logger.LogInformation("数据生成器启动，采样间隔: 1秒");
+
             // 进入数据生成主循环
-            await GenerateDataAsync(_cts.Token);
+            await GenerateDataAsync(runCts.Token);
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (runCts.IsCancellationRequested)
         {
-            // 协作式取消：捕获取消异常，记录日志
+            // 只吞掉由本轮令牌发起的正常取消；订阅者自己的取消异常仍应暴露。
             _logger.LogInformation("数据生成器被取消");
         }
         finally
         {
-            // 无论正常结束还是取消，都要更新状态
-            _isRunning = false;
-            OnStatusChanged("数据采集停止");
+            try
+            {
+                // 先发布停止事件，再释放“单运行”门闩，保证观察者不会看到新启动先于旧停止。
+                OnStatusChanged("数据采集停止");
+            }
+            finally
+            {
+                lock (_stateLock)
+                {
+                    if (ReferenceEquals(_cts, runCts))
+                    {
+                        _cts = null;
+                        _isRunning = false;
+                    }
+                }
+
+                // StartAsync 创建并拥有 CTS；必须等循环结束后再释放，Dispose 只发取消信号。
+                runCts.Dispose();
+            }
         }
     }
 
@@ -169,10 +201,14 @@ public class DeviceDataGeneratorService : IDisposable
     /// </summary>
     public void Stop()
     {
-        if (!_isRunning) return;
+        lock (_stateLock)
+        {
+            if (!_isRunning) return;
 
-        _logger.LogInformation("正在停止数据生成器...");
-        _cts?.Cancel(); // 发送取消信号
+            _logger.LogInformation("正在停止数据生成器...");
+            // 在同一锁内取消，避免 StartAsync 的 finally 同时释放 CTS。
+            _cts?.Cancel();
+        }
     }
 
     // ========== 私有方法 ==========
@@ -278,15 +314,13 @@ public class DeviceDataGeneratorService : IDisposable
     /// </summary>
     public void Dispose()
     {
-        if (!_disposed)
+        lock (_stateLock)
         {
-            // 停止数据采集
-            Stop();
-
-            // 释放 CancellationTokenSource
-            _cts?.Dispose();
+            if (_disposed) return;
 
             _disposed = true;
+            // 异步运行方法拥有 CTS；Dispose 仅请求取消，真正释放发生在 StartAsync 的 finally。
+            _cts?.Cancel();
         }
     }
 }

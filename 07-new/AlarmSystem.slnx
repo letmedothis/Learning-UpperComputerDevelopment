@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="AlarmSystem.Core/AlarmSystem.Core.csproj" />
+  <Project Path="AlarmSystem.Tests/AlarmSystem.Tests.csproj" />
+</Solution>

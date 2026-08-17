@@ -1,1 +1,17 @@
 .worktrees/
+
+# Build outputs
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.cache
+
+# NuGet
+*.nupkg

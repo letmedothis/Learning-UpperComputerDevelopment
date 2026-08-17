@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ProductionLineMonitor.App/ProductionLineMonitor.App.csproj" />
+  <Project Path="ProductionLineMonitor.Core/ProductionLineMonitor.Core.csproj" />
+  <Project Path="ProductionLineMonitor.Tests/ProductionLineMonitor.Tests.csproj" />
+</Solution>

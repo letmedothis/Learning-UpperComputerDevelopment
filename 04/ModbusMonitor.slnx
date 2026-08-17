@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ModbusMonitor.Core/ModbusMonitor.Core.csproj" />
+  <Project Path="ModbusMonitor.Simulator/ModbusMonitor.Simulator.csproj" />
+  <Project Path="ModbusMonitor.Tests/ModbusMonitor.Tests.csproj" />
+</Solution>

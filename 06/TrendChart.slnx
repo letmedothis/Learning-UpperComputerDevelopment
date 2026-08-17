@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TrendChart.App/TrendChart.App.csproj" />
+  <Project Path="TrendChart.Core/TrendChart.Core.csproj" />
+  <Project Path="TrendChart.Tests/TrendChart.Tests.csproj" />
+</Solution>
