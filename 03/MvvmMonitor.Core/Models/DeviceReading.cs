@@ -1,7 +1,7 @@
 namespace MvvmMonitor.Core.Models;
 
 public sealed record DeviceReading(
-    DateTime Timestamp,
+    DateTimeOffset Timestamp,
     double Temperature,
     double Pressure,
     double Speed,

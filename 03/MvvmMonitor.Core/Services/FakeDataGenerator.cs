@@ -28,7 +28,7 @@ public sealed class FakeDataGenerator
         var overall = ReadingEvaluator.GetOverallLevel(tempLevel, pressLevel, speedLevel);
 
         return new DeviceReading(
-            DateTime.Now, temperature, pressure, speed, _production,
+            DateTimeOffset.UtcNow, temperature, pressure, speed, _production,
             tempLevel, pressLevel, speedLevel, overall);
     }
 

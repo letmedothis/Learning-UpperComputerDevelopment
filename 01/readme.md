@@ -18,7 +18,11 @@ C#Differences/
     ├── 05_LINQ/                  # LINQ 查询
     ├── 06_AsyncAwait/            # Task 和 async/await + CancellationToken
     ├── 07_Disposable/            # IDisposable 资源释放
-    └── 08_ConfigLoggingDI/       # 配置、日志、依赖注入
+    ├── 08_ConfigLoggingDI/       # 配置、日志、依赖注入
+    ├── 09_PatternMatching/       # 模式匹配（C# 最强大特性）
+    ├── 10_CommonTraps/           # Java 开发者常见陷阱
+    ├── 11_NuGetPackageManagement/ # NuGet 包管理对比
+    └── 12_Generics/              # 泛型差异（具化 vs 类型擦除）
 ```
 
 ### 知识点总结
@@ -266,3 +270,76 @@ DeviceDataGenerator/
 | 依赖注入 | Spring IoC | Microsoft.Extensions.DI |
 | 日志 | Log4j / SLF4J | ILogger |
 | 配置 | application.yml | appsettings.json + IConfiguration |
+| 模式匹配 | instanceof + switch（有限） | is/switch 表达式（强大） |
+| 泛型 | 类型擦除 (Type Erasure) | 具化 (Reified) |
+| 包管理 | Maven/Gradle | NuGet + dotnet CLI |
+
+### 新增模块知识点总结
+
+#### 9. 模式匹配（Pattern Matching）
+
+**Java 对比**：Java 16+ 才引入基本的模式匹配，C# 的模式匹配更强大。
+
+```csharp
+// 类型模式
+if (obj is string s) { Console.WriteLine(s.Length); }
+
+// 关系模式（Java 无直接等价物）
+string status = temperature switch
+{
+    < 0 => "极寒",
+    >= 0 and < 10 => "寒冷",
+    >= 10 and < 20 => "凉爽",
+    >= 20 and < 30 => "舒适",
+    >= 30 => "炎热"
+};
+
+// 属性模式（Java 无直接等价物）
+if (reading is { Temperature: > 40, Pressure: > 0.6 })
+{
+    Console.WriteLine("危险状态！");
+}
+```
+
+#### 10. 常见陷阱（Common Traps）
+
+**关键差异**：
+- `==` vs `.Equals()`：C# string 的 `==` 比较值，Java 的 `==` 比较引用
+- `is null` vs `== null`：C# 推荐使用 `is null`，避免运算符重载影响
+- 值类型 vs 引用类型：C# struct 是值类型，赋值时会复制整个值
+- LINQ 延迟执行：每次枚举都会重新计算，需要多次访问时使用 `ToList()` 缓存
+
+#### 11. NuGet 包管理
+
+**Java 对比**：
+
+| 概念 | Java Maven | Java Gradle | C# NuGet |
+|------|------------|-------------|----------|
+| 配置文件 | pom.xml | build.gradle | .csproj |
+| 包仓库 | Maven Central | Maven Central | NuGet.org |
+| 添加依赖 | 手动编辑 XML | implementation | dotnet add package |
+| 恢复依赖 | mvn dependency:resolve | gradle build | dotnet restore |
+
+**常用 NuGet 包**：
+- `Microsoft.Extensions.Hosting` ← Spring Boot
+- `Microsoft.EntityFrameworkCore` ← Hibernate/JPA
+- `Newtonsoft.Json` ← Jackson
+- `xunit` ← JUnit
+
+#### 12. 泛型差异（Generics）
+
+**核心区别**：Java 泛型是类型擦除的，C# 泛型是具化的。
+
+```csharp
+// C# 可以在运行时获取泛型类型信息
+List<string> strings = new List<string>();
+Console.WriteLine(strings.GetType().Name); // List`1
+
+// C# 可以创建泛型数组
+var array = new List<string>[10]; // 合法
+
+// C# 可以检查泛型类型
+if (strings is List<string>) { ... } // 合法
+```
+
+**性能影响**：C# 泛型无需装箱/拆箱，性能更好。

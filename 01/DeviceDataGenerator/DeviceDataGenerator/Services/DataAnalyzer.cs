@@ -206,8 +206,11 @@ public class DataAnalyzer
     /// <returns>分析结果</returns>
     private AnalysisResult AnalyzeMetric(string name, IEnumerable<double> values)
     {
-        // Any() 检查是否有数据，避免空序列的聚合操作
-        if (!values.Any())
+        // 缓存为列表，避免多次遍历延迟执行的 IEnumerable
+        // 【教学要点】IEnumerable<T> 是延迟执行的，每次枚举都会重新计算
+        var list = values.ToList();
+
+        if (list.Count == 0)
         {
             return new AnalysisResult
             {
@@ -223,10 +226,10 @@ public class DataAnalyzer
         return new AnalysisResult
         {
             MetricName = name,
-            Min = values.Min(),           // 最小值
-            Max = values.Max(),           // 最大值
-            Average = values.Average(),   // 平均值
-            Count = values.Count()        // 数量
+            Min = list.Min(),           // 最小值
+            Max = list.Max(),           // 最大值
+            Average = list.Average(),   // 平均值
+            Count = list.Count          // 数量
         };
     }
 

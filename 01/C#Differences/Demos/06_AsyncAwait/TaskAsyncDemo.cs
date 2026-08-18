@@ -176,7 +176,7 @@ public class TaskAsyncDemo
         {
             await Task.WhenAll(tasks);
         }
-        catch
+        catch (Exception)
         {
             // WhenAll 只抛出第一个异常，需要检查各个 Task
             foreach (var task in tasks)
@@ -310,7 +310,7 @@ public class TaskAsyncDemo
         await Task.Delay(200); // 模拟读取延迟
         return new DeviceReading
         {
-            Timestamp = DateTime.Now,
+            Timestamp = DateTimeOffset.UtcNow,
             Temperature = 20 + Random.Shared.NextDouble() * 15,
             Pressure = 0.1 + Random.Shared.NextDouble() * 0.5,
             Speed = 1000 + Random.Shared.NextDouble() * 2000
@@ -327,8 +327,8 @@ public class TaskAsyncDemo
 /// </summary>
 public record DeviceReading
 {
-    /// <summary>时间戳</summary>
-    public DateTime Timestamp { get; init; }
+    /// <summary>时间戳（UTC时间，避免时区歧义）</summary>
+    public DateTimeOffset Timestamp { get; init; }
 
     /// <summary>温度 (°C)</summary>
     public double Temperature { get; init; }

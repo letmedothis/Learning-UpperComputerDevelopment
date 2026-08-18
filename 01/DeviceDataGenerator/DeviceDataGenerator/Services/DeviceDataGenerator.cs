@@ -263,7 +263,7 @@ public class DeviceDataGeneratorService : IDisposable
     {
         return new DeviceReading
         {
-            Timestamp = DateTime.Now,
+            Timestamp = DateTimeOffset.UtcNow,
             // 温度: 25 ± 5°C
             Temperature = _config.TemperatureBase + (_random.NextDouble() - 0.5) * _config.TemperatureRange,
             // 压力: 0.3 ± 0.1 MPa

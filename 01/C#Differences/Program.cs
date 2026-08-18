@@ -1,4 +1,4 @@
-﻿using C_Differences.Demos._01_Property;
+using C_Differences.Demos._01_Property;
 using C_Differences.Demos._02_NullableReference;
 using C_Differences.Demos._03_Records;
 using C_Differences.Demos._04_DelegatesEvents;
@@ -6,6 +6,10 @@ using C_Differences.Demos._05_LINQ;
 using C_Differences.Demos._06_AsyncAwait;
 using C_Differences.Demos._07_Disposable;
 using C_Differences.Demos._08_ConfigLoggingDI;
+using C_Differences.Demos._09_PatternMatching;
+using C_Differences.Demos._10_CommonTraps;
+using C_Differences.Demos._11_NuGetPackageManagement;
+using C_Differences.Demos._12_Generics;
 
 // 学习 C# Property
 Console.WriteLine("=== C# Property 学习 ===");
@@ -85,3 +89,23 @@ disposableDemo.Demo();
 Console.WriteLine("\n=== C# 配置、日志、依赖注入 学习 ===");
 var configLoggingDIDemo = new ConfigLoggingDIDemo();
 configLoggingDIDemo.Demo();
+
+// 模式匹配 演示
+Console.WriteLine("\n=== C# 模式匹配学习 ===");
+var patternMatchingDemo = new PatternMatchingDemo();
+patternMatchingDemo.Demo();
+
+// 常见陷阱 演示
+Console.WriteLine("\n=== Java 开发者常见陷阱 ===");
+var commonTrapsDemo = new CommonTrapsDemo();
+commonTrapsDemo.Demo();
+
+// NuGet 包管理 演示
+Console.WriteLine("\n=== NuGet 包管理对比 ===");
+var nugetDemo = new NuGetPackageManagementDemo();
+nugetDemo.Demo();
+
+// 泛型差异 演示
+Console.WriteLine("\n=== 泛型差异学习 ===");
+var genericsDemo = new GenericsDemo();
+genericsDemo.Demo();

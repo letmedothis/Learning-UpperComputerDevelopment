@@ -24,10 +24,10 @@ namespace DeviceDataGenerator.Models;
 public record DeviceReading
 {
     /// <summary>
-    /// 时间戳 - 使用 init 访问器
+    /// 时间戳 - 使用 init 访问器（UTC时间，避免时区歧义）
     /// init: 只能在对象初始化时赋值，之后不可修改
     /// </summary>
-    public DateTime Timestamp { get; init; }
+    public DateTimeOffset Timestamp { get; init; }
 
     /// <summary>
     /// 温度 (°C)

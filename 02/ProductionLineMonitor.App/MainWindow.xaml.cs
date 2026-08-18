@@ -100,7 +100,9 @@ public partial class MainWindow : Window
         if (_cts == null || _acquisitionTask == null) return;
 
         _operatingState = OperatingState.Stopping;
-        RefreshDashboard("正在停止...");
+        // 关闭窗口时由 Window_Closing 设置更详细的消息，避免覆盖
+        if (!_isClosing)
+            RefreshDashboard("正在停止...");
         _cts.Cancel();
 
         try

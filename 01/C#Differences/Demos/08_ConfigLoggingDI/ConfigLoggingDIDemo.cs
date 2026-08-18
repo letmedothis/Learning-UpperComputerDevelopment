@@ -236,7 +236,7 @@ public class TemperatureSensorService : ISensorService
         {
             SensorName = sensorName,
             Value = 20 + _random.NextDouble() * 15,
-            Timestamp = DateTime.Now
+            Timestamp = DateTimeOffset.UtcNow
         };
     }
 }
@@ -294,8 +294,6 @@ public class MonitoringService : IMonitoringService
 
         // 启动后台监控任务
         Task.Run(() => MonitorLoop(_cts.Token));
-
-        _isRunning = true;
     }
 
     public void StopMonitoring()
@@ -344,5 +342,5 @@ public record SensorReading
 {
     public string SensorName { get; init; } = string.Empty;
     public double Value { get; init; }
-    public DateTime Timestamp { get; init; }
+    public DateTimeOffset Timestamp { get; init; }
 }

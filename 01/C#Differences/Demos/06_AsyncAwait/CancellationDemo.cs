@@ -181,7 +181,7 @@ public class CancellationDemo
             count++;
             var reading = new DeviceReading
             {
-                Timestamp = DateTime.Now,
+                Timestamp = DateTimeOffset.UtcNow,
                 Temperature = 20 + Random.Shared.NextDouble() * 15,
                 Pressure = 0.1 + Random.Shared.NextDouble() * 0.5,
                 Speed = 1000 + Random.Shared.NextDouble() * 2000
