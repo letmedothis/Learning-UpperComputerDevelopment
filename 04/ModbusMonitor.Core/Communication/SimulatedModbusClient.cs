@@ -10,20 +10,24 @@ public sealed class SimulatedModbusClient : IModbusClient
     private bool _connected;
     private int _production;
 
+    /// <summary>是否已连接。</summary>
     public bool IsConnected => _connected;
 
+    /// <summary>模拟连接到设备。</summary>
     public Task ConnectAsync(CancellationToken cancellationToken = default)
     {
         _connected = true;
         return Task.CompletedTask;
     }
 
+    /// <summary>模拟断开连接。</summary>
     public Task DisconnectAsync()
     {
         _connected = false;
         return Task.CompletedTask;
     }
 
+    /// <summary>读取保持寄存器，未写入的地址返回模拟值。</summary>
     public Task<ushort[]> ReadHoldingRegistersAsync(byte slaveAddress, ushort startAddress, ushort count, CancellationToken cancellationToken = default)
     {
         if (!_connected) throw new InvalidOperationException("未连接到设备");
@@ -37,6 +41,7 @@ public sealed class SimulatedModbusClient : IModbusClient
         return Task.FromResult(result);
     }
 
+    /// <summary>写入单个寄存器。</summary>
     public Task WriteSingleRegisterAsync(byte slaveAddress, ushort registerAddress, ushort value, CancellationToken cancellationToken = default)
     {
         if (!_connected) throw new InvalidOperationException("未连接到设备");
@@ -57,6 +62,7 @@ public sealed class SimulatedModbusClient : IModbusClient
         };
     }
 
+    /// <summary>释放资源，断开连接。</summary>
     public ValueTask DisposeAsync()
     {
         _connected = false;

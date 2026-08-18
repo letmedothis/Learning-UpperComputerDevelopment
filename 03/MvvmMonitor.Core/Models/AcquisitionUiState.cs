@@ -1,5 +1,8 @@
 namespace MvvmMonitor.Core.Models;
 
+/// <summary>
+/// 采集运行状态枚举。
+/// </summary>
 public enum OperatingState
 {
     Stopped,
@@ -12,6 +15,9 @@ public enum OperatingState
 /// </summary>
 public static class AcquisitionUiState
 {
+    /// <summary>
+    /// 将运行状态转换为带图标的显示文本。
+    /// </summary>
     public static string GetOperatingStatus(OperatingState state) => state switch
     {
         OperatingState.Stopped => "■ 已停止",
@@ -20,6 +26,9 @@ public static class AcquisitionUiState
         _ => "未知"
     };
 
+    /// <summary>
+    /// 根据异常信息生成完成消息。
+    /// </summary>
     public static string GetCompletionMessage(Exception? failure) =>
         failure is null ? "已停止" : $"采集异常: {failure.Message}";
 }

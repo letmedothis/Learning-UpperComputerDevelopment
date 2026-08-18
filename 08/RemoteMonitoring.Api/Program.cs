@@ -22,5 +22,6 @@ var app = builder.Build();
 // 配置中间件
 app.UseCors();
 app.MapControllers();
+app.MapOpenApi();
 
 app.Run();

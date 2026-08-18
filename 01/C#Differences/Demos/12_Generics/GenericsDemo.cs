@@ -394,6 +394,20 @@ public class ConsoleLogger<T> : ILogger<T>
     }
 }
 
+/// <summary>
+/// 简化的单泛型参数仓储，内部委托给 InMemoryRepository&lt;T, int&gt;。
+/// </summary>
+public class Repository<T> where T : class
+{
+    private readonly InMemoryRepository<T, int> _inner = new();
+
+    public int Count => _inner.GetAll().Count();
+
+    public IEnumerable<T> GetAll() => _inner.GetAll();
+
+    public void Add(T entity) => _inner.Add(entity);
+}
+
 // ========== 数据模型 ==========
 
 public class DeviceReading

@@ -178,7 +178,7 @@ public class FakeDatabaseConnection : IDisposable
     public FakeDatabaseConnection(string connectionString)
     {
         _connectionString = connectionString;
-        Console.WriteLine($"   [DB] 连接对象创建: {connectionString[..20]}...");
+        Console.WriteLine($"   [DB] 连接对象创建: {(connectionString.Length > 20 ? connectionString[..20] : connectionString)}...");
     }
 
     public void Open()

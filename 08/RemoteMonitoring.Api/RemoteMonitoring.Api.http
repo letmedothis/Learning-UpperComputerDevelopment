@@ -1,6 +1,17 @@
 @RemoteMonitoring.Api_HostAddress = http://localhost:5101
 
-GET {{RemoteMonitoring.Api_HostAddress}}/weatherforecast/
+### 获取所有设备列表
+GET {{RemoteMonitoring.Api_HostAddress}}/api/devices
 Accept: application/json
 
-###
+### 获取指定设备状态
+GET {{RemoteMonitoring.Api_HostAddress}}/api/devices/CNC-001/state
+Accept: application/json
+
+### 获取设备历史数据
+GET {{RemoteMonitoring.Api_HostAddress}}/api/devices/CNC-001/history?count=10
+Accept: application/json
+
+### 健康检查
+GET {{RemoteMonitoring.Api_HostAddress}}/api/health
+Accept: application/json

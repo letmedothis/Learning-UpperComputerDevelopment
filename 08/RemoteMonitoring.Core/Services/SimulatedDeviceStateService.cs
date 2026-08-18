@@ -13,6 +13,7 @@ public sealed class SimulatedDeviceStateService : IDeviceStateService
     private readonly ConcurrentDictionary<string, DeviceHistory> _history = new();
     private readonly Random _random = new();
 
+    /// <summary>初始化模拟服务，预置三台数控机床。</summary>
     public SimulatedDeviceStateService()
     {
         // 初始化模拟设备
@@ -28,12 +29,14 @@ public sealed class SimulatedDeviceStateService : IDeviceStateService
         _history[deviceId] = new DeviceHistory(state);
     }
 
+    /// <inheritdoc />
     public Task<MachineState?> GetCurrentStateAsync(string deviceId, CancellationToken cancellationToken = default)
     {
         _currentStates.TryGetValue(deviceId, out var state);
         return Task.FromResult(state);
     }
 
+    /// <inheritdoc />
     public Task<IReadOnlyList<MachineState>> GetStateHistoryAsync(string deviceId, int count, CancellationToken cancellationToken = default)
     {
         if (!_history.TryGetValue(deviceId, out var history))
@@ -42,6 +45,7 @@ public sealed class SimulatedDeviceStateService : IDeviceStateService
         return Task.FromResult(history.GetSnapshot(count));
     }
 
+    /// <inheritdoc />
     public Task<IReadOnlyList<DeviceSummary>> GetAllDevicesAsync(CancellationToken cancellationToken = default)
     {
         var summaries = _currentStates.Values
@@ -51,6 +55,7 @@ public sealed class SimulatedDeviceStateService : IDeviceStateService
         return Task.FromResult<IReadOnlyList<DeviceSummary>>(summaries);
     }
 
+    /// <inheritdoc />
     public Task UpdateStateAsync(MachineState state, CancellationToken cancellationToken = default)
     {
         _currentStates[state.DeviceId] = state;

@@ -92,11 +92,12 @@ public partial class MainWindow : Window
         if (series.Points.Count < 2) return;
 
         var color = (Color)ColorConverter.ConvertFromString(series.Color);
-        var pen = new Pen(new SolidColorBrush(color), 2);
+        var brush = new SolidColorBrush(color);
 
         var minTime = series.Points.First().Timestamp;
         var maxTime = series.Points.Last().Timestamp;
         var timeRange = (maxTime - minTime).TotalSeconds;
+        if (timeRange == 0) timeRange = 1;
 
         var valueRange = series.MaxValue - series.MinValue;
         if (valueRange == 0) valueRange = 1;
@@ -118,7 +119,7 @@ public partial class MainWindow : Window
             }
         }
 
-        var path = new Path { Data = geometry, Stroke = pen.Brush, StrokeThickness = 2 };
+        var path = new Path { Data = geometry, Stroke = brush, StrokeThickness = 2 };
         ChartCanvas.Children.Add(path);
     }
 

@@ -1,5 +1,3 @@
-﻿using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace MvvmMonitor.App;
@@ -10,4 +8,3 @@ namespace MvvmMonitor.App;
 public partial class App : Application
 {
 }
-
